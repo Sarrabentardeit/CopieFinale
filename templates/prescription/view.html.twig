@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prescriptions pour le dossier médical #{{ medicalRecord.id }}{% endblock %}
+
+{% block body %}
+    <h1>Prescriptions pour le dossier médical #{{ medicalRecord.id }}</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Médicament</th>
+            <th>Dosage</th>
+            <th>Date de début</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for prescription in prescriptions %}
+            <tr>
+                <td>{{ prescription.id }}</td>
+                <td>{{ prescription.medication }}</td>
+                <td>{{ prescription.dosage }}</td>
+                <td>{{ prescription.startDate ? prescription.startDate|date('Y-m-d') : 'Non spécifiée' }}</td>
+                <td>
+                    <a href="{{ path('app_prescription_edit', { 'id': prescription.id }) }}" class="btn btn-warning btn-sm">
+                        Modifier
+                    </a>
+                    <form method="post" action="{{ path('app_prescription_delete', { 'id': prescription.id }) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ prescription.id) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune prescription trouvée.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('doctor_dashboard') }}" class="btn btn-secondary">Retour au tableau de bord</a>
+{% endblock %}

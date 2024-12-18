@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Dossiers Médicaux{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Sidebar */
+        body {
+            background: linear-gradient(to bottom right, #eafaf1, #e0f7fa);
+            font-family: 'Roboto', sans-serif;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px 10px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            color: #00a876;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #00a876;
+            color: #fff;
+        }
+
+        /* Conteneur principal */
+        .content {
+            margin-left: 270px; /* Décalage pour la sidebar */
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* Tableau */
+        table {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+        }
+
+        table td {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #f0f0f0;
+        }
+
+        table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Bouton Retour */
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Tableau de Bord</h3>
+        <a href="{{ path('patient_dashboard') }}">
+            <i class="bi bi-speedometer2"></i> Accueil
+        </a>
+        <a href="{{ path('appointment_new') }}">
+            <i class="bi bi-calendar-plus"></i> Prendre un Rendez-vous
+        </a>
+        <a href="{{ path('app_medical_record_my') }}" class="active">
+            <i class="bi bi-file-medical"></i> Mes Dossiers Médicaux
+        </a>
+        <a href="{{ path('app_patient_account') }}">
+            <i class="bi bi-person-circle"></i> Mon Espace Patient
+        </a>
+        <a href="{{ path('app_logout') }}">
+            <i class="bi bi-box-arrow-right"></i> Déconnexion
+        </a>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="content">
+        <h1>Mes Dossiers Médicaux</h1>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Diagnostic</th>
+                <th>Plan de traitement</th>
+                <th>Date de création</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for medical_record in medical_records %}
+                <tr>
+                    <td>{{ medical_record.diagnosis }}</td>
+                    <td>{{ medical_record.treatmentPlan }}</td>
+                    <td>{{ medical_record.createdDate ? medical_record.createdDate|date('Y-m-d') : 'Non spécifiée' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">Aucun dossier médical trouvé.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('patient_dashboard') }}" class="btn btn-secondary">
+                Retour au tableau de bord
+            </a>
+        </div>
+    </div>
+{% endblock %}

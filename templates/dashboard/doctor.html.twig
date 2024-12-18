@@ -1,0 +1,219 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Fond global */
+        body {
+            background: linear-gradient(135deg, #e6f9f2, #d0f0f8);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px 15px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            color: #1abc9c;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #1abc9c;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        /* Conteneur principal */
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Titre */
+        h1 {
+            color: #00796b;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Tableau stylisé */
+        .table-container {
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .table th {
+            background-color: #1abc9c;
+            color: #fff;
+            text-align: center;
+        }
+
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Boutons */
+        .btn-sm {
+            margin: 5px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-sm:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
+            transition: all 0.3s ease;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="sidebar">
+        <h3>Tableau de Bord</h3>
+        <a href="{{ path('doctor_dashboard') }}" class="active">
+            <i class="bi bi-speedometer2"></i> Accueil
+        </a>
+        <a href="{{ path('app_doctor_medical_records') }}">
+            <i class="bi bi-folder-plus"></i> Gérer les Dossiers Médicaux
+        </a>
+        <a href="{{ path('app_prescription_index') }}">
+            <i class="bi bi-file-earmark-text"></i> Gérer les Prescriptions
+        </a>
+        <a href="{{ path('app_logout') }}">
+            <i class="bi bi-box-arrow-right"></i> Déconnexion
+        </a>
+    </div>
+
+
+
+    <!-- Contenu principal -->
+    <div class="content">
+        <h1>Tableau de Bord Médecin</h1>
+        <div class="table-container">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date & Heure</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                    <th>Dossier Médical</th>
+                    <th>Prescription</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        <!-- Patient -->
+                        <td>{{ appointment.patient.username }}</td>
+
+                        <!-- Date & Heure -->
+                        <td>{{ appointment.dateTime ? appointment.dateTime|date('Y-m-d H:i') : 'Non défini' }}</td>
+
+                        <!-- Statut -->
+                        <td>
+                            <span class="badge {% if appointment.status == 'Confirmé' %}bg-success{% elseif appointment.status == 'Annulé' %}bg-danger{% else %}bg-warning{% endif %}">
+                                {{ appointment.status }}
+                            </span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td>
+                            <form method="post" action="{{ path('appointment_change_status', {id: appointment.id}) }}">
+                                <select name="status" class="form-select">
+                                    <option value="Confirmé" {% if appointment.status == 'Confirmé' %}selected{% endif %}>Confirmé</option>
+                                    <option value="Annulé" {% if appointment.status == 'Annulé' %}selected{% endif %}>Annulé</option>
+                                    <option value="Reprogrammé" {% if appointment.status == 'Reprogrammé' %}selected{% endif %}>Reprogrammé</option>
+                                </select>
+                                <button type="submit" class="btn btn-success btn-sm mt-2">Mettre à jour</button>
+                            </form>
+                        </td>
+
+                        <!-- Dossier Médical -->
+                        <td>
+                            <a href="{{ path('app_medical_record_new', { 'appointmentId': appointment.id }) }}" class="btn btn-primary btn-sm">
+                                Créer
+                            </a>
+                            {% set found = false %}
+                            {% for medical_record in medical_records %}
+                                {% if medical_record.appointment is not null and medical_record.appointment.id == appointment.id %}
+                                    <a href="{{ path('app_medical_record_show', { 'id': medical_record.id }) }}" class="btn btn-info btn-sm">
+                                        Voir
+                                    </a>
+                                    {% set found = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not found %}
+                                <span class="text-muted">Aucun dossier</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Prescription -->
+                        <td>
+                            <a href="{{ path('app_prescription_new', { 'medicalRecordId': appointment.id }) }}" class="btn btn-primary btn-sm">
+                                Ajouter
+                            </a>
+                            <a href="{{ path('app_prescription_view', { 'medicalRecordId': appointment.id }) }}" class="btn btn-info btn-sm">
+                                Voir
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun rendez-vous trouvé.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

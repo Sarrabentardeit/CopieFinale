@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Prescription{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: #eafaf1;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .card {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .card-header {
+            background-color: #00a876;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-edit {
+            background-color: #f0ad4e;
+            color: #fff;
+        }
+
+        .btn-delete {
+            background-color: #d9534f;
+            color: #fff;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Sidebar -->
+
+
+    <!-- Contenu principal -->
+    <div class="content">
+        <div class="card">
+            <div class="card-header">
+                Détails de la Prescription
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th style="width: 30%;">ID</th>
+                        <td>{{ prescription.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Médicament</th>
+                        <td>{{ prescription.medication }}</td>
+                    </tr>
+                    <tr>
+                        <th>Dosage</th>
+                        <td>{{ prescription.dosage }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date de Début</th>
+                        <td>{{ prescription.startDate ? prescription.startDate|date('Y-m-d') : 'Non défini' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="text-center mt-4">
+                    <a href="{{ path('doctor_dashboard') }}" class="btn btn-secondary">Retour au tableau de bord</a>
+                    <a href="{{ path('app_prescription_edit', {'id': prescription.id}) }}" class="btn btn-edit">Modifier</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

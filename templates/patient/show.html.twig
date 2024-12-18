@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #000000;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        .details p {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #333333;
+        }
+
+        .details strong {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .actions a, .actions button {
+            padding: 10px 15px;
+            font-size: 14px;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        .actions .btn-edit {
+            background-color: #007bff;
+        }
+
+        .actions .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+        .actions .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .actions .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .actions .btn-back {
+            background-color: #6c757d;
+        }
+
+        .actions .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        button[type="submit"] {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #ffffff;
+            background-color: #dc3545;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #c82333;
+        }
+    </style>
+
+    <div class="container">
+        <h1>Détails du Patient</h1>
+        <div class="details">
+            <p><strong>Nom :</strong> {{ patient.username }}</p>
+            <p><strong>Date de Naissance :</strong> {{ patient.dob|date('d/m/Y') }}</p>
+            <p><strong>Genre :</strong> {{ patient.gender }}</p>
+            <p><strong>Adresse :</strong> {{ patient.address }}</p>
+            <p><strong>Email :</strong> {{ patient.email }}</p>
+        </div>
+
+        <div class="actions">
+            <a href="{{ path('patient_edit', { 'id': patient.id }) }}" class="btn-edit">Modifier</a>
+            <form method="post" action="{{ path('patient_delete', { 'id': patient.id }) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce patient ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ patient.id) }}">
+                <button type="submit" class="btn-delete">Supprimer</button>
+            </form>
+            <a href="{{ path('admin_dashboard') }}" class="btn-back">Retour à la liste</a>
+        </div>
+    </div>
+{% endblock %}

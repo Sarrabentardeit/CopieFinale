@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Dossier Médical{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #eafaf1;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .content {
+            margin: 30px auto;
+            width: 60%;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .btn {
+            border-radius: 8px;
+            margin-top: 15px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #00a876;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="content">
+        <h1>Modifier le Dossier Médical</h1>
+
+        <!-- Formulaire d'édition -->
+        {{ include('medical_record/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+        <!-- Boutons d'action -->
+        <div class="form-actions">
+            <a href="{{ path('doctor_dashboard') }}" class="btn btn-secondary">Retour au tableau de bord</a>
+            {{ include('medical_record/_delete_form.html.twig', {'button_label': 'Supprimer', 'button_class': 'btn btn-danger'}) }}
+        </div>
+    </div>
+{% endblock %}

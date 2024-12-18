@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Mon Compte{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Modifier mes informations</h1>
+
+        {{ form_start(form, {'attr': {'class': 'card p-4 shadow-sm'}}) }}
+        {{ form_row(form.username, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.dob, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.address, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.email, {'attr': {'class': 'form-control mb-3'}}) }}
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg">Enregistrer</button>
+        </div>
+        {{ form_end(form) }}
+
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_patient_account') }}" class="btn btn-secondary">Retour à mon compte</a>
+        </div>
+    </div>
+{% endblock %}

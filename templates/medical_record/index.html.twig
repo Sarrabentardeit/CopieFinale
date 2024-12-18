@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dossiers médicaux pour le patient {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: #eafaf1;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .sidebar a.active, .sidebar a:hover {
+            background-color: #00a876;
+            color: #fff;
+        }
+
+        /* Contenu principal */
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .table {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Tableau de Bord</h3>
+        <a href="{{ path('patient_dashboard') }}">Accueil</a>
+        <a href="{{ path('appointment_new') }}">Prendre un Rendez-vous</a>
+        <a href="{{ path('app_medical_record_my') }}" class="active">Mes Dossiers Médicaux</a>
+        <a href="{{ path('app_logout') }}">Déconnexion</a>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="content">
+        <h1>Dossiers médicaux pour le patient</h1>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Diagnostic</th>
+                <th>Plan de traitement</th>
+                <th>Date de création</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for medical_record in medical_records %}
+                <tr>
+                    <td>{{ medical_record.diagnosis }}</td>
+                    <td>{{ medical_record.treatmentPlan }}</td>
+                    <td>{{ medical_record.createdDate|date('Y-m-d') }}</td>
+                    <td>
+                        <a href="{{ path('app_medical_record_show', {'id': medical_record.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun dossier médical trouvé pour ce patient.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('doctor_dashboard') }}" class="btn btn-secondary mt-3">Retour au tableau de bord</a>
+    </div>
+{% endblock %}
